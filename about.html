@@ -41,13 +41,14 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 2rem;
+            animation: slideInLeft 1s ease-out;
+
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: 1rem;
-            animation: slideInLeft 1s ease-out;
         }
 
         .logo-img {
@@ -59,8 +60,7 @@
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 1.2rem;
-            animation: rotate 3s linear infinite;
+            font-size: 1.5rem;
         }
 
         .nav-menu {
@@ -192,6 +192,7 @@
         body.dark-mode .theme-toggle {
             color: #f1f1f1;
         }
+
         @keyframes slideInLeft {
             from {
                 transform: translateX(-100px);
@@ -368,7 +369,7 @@
 
         section {
             padding: 80px 20px;
-            
+
         }
 
         .container {
@@ -533,7 +534,6 @@
                 height: 18rem;
             }
         }
-
     </style>
 </head>
 
@@ -649,53 +649,44 @@
                 </div>
             </div>
         </section>
-</main>
-<footer class="footer">
-    <div class="footer-container">
+    </main>
+    <footer class="footer">
+        <div class="footer-container">
 
-        <div class="footer-section">
-            <h3 data-kk="We_Sdu" data-ru="We_Sdu" data-en="We_Sdu">We_Sdu</h3>
-            <ul class="footer-list">
-                <li>
-                    <a href="about.html"
-                       data-kk="Біз туралы"
-                       data-ru="О нас"
-                       data-en="About us">Біз туралы</a>
-                </li>
-                <li>
-                    <a href="contact.html"
-                       data-kk="Байланыс"
-                       data-ru="Контакты"
-                       data-en="Contacts">Байланыс</a>
-                </li>
-            </ul>
+            <div class="footer-section">
+                <h3 data-kk="We_Sdu" data-ru="We_Sdu" data-en="We_Sdu">We_Sdu</h3>
+                <ul class="footer-list">
+                    <li>
+                        <a href="about.html" data-kk="Біз туралы" data-ru="О нас" data-en="About us">Біз туралы</a>
+                    </li>
+                    <li>
+                        <a href="contact.html" data-kk="Байланыс" data-ru="Контакты" data-en="Contacts">Байланыс</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3 data-kk="Әлеуметтік желілерде бақылаңыз" data-ru="Следите за нами в соцсетях"
+                    data-en="Follow us on social media">
+                    Әлеуметтік желілерде бақылаңыз
+                </h3>
+                <a href="https://www.instagram.com/we_sdu?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                    target="_blank" class="social-link">
+                    <img src="images/instagram-new (1).png" alt="Instagram" class="social-icon">
+                </a>
+            </div>
         </div>
 
-        <div class="footer-section">
-            <h3
-                data-kk="Әлеуметтік желілерде бақылаңыз"
-                data-ru="Следите за нами в соцсетях"
-                data-en="Follow us on social media">
-                Әлеуметтік желілерде бақылаңыз
-            </h3>
-            <a href="https://www.instagram.com/we_sdu?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-               target="_blank"
-               class="social-link">
-                <img src="images/instagram-new (1).png" alt="Instagram" class="social-icon">
-            </a>
+        <!-- Төменгі логотип -->
+        <div class="footer-logo-center">
+            <img src="images/logo.png" alt="Логотип" class="footer-logo">
         </div>
-    </div>
 
-    <!-- Төменгі логотип -->
-    <div class="footer-logo-center">
-        <img src="images/logo.png" alt="Логотип" class="footer-logo">
-    </div>
-
-    <!-- Мөлдір логотип -->
-    <div class="transparent-logo">
-        <img src="images/logo.png" alt="Мөлдір логотип">
-    </div>
-</footer>
+        <!-- Мөлдір логотип -->
+        <div class="transparent-logo">
+            <img src="images/logo.png" alt="Мөлдір логотип">
+        </div>
+    </footer>
     <script>
         // Language switching
         function changeLanguage(lang) {

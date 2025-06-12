@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>we-sdu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: white;
+            color: black;
+            transition: 0.3s ease;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            animation: rotate 3s linear infinite;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+            animation: slideInRight 1s ease-out;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: #000;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-item a:hover {
+            color: #8B5CF6;
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .language-selector {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-btn {
+            background: linear-gradient(45deg, #8B5CF6, #000);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lang-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 5px 0;
+            right: 0;
+            top: 35px;
+            z-index: 999;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .lang-dropdown.show {
+            display: block;
+        }
+
+        .lang-option {
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lang-option:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8B5CF6;
+        }
+
+        .burger {
+            display: none;
+            width: 30px;
+            height: 30px;
+            margin-left: 50%;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .burger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #333;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 15px;
+            transition: 0.3s;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        body.dark-mode .header {
+            background: rgba(18, 18, 18, 0.95);
+        }
+
+        body.dark-mode .nav-item a {
+            color: #fff;
+        }
+
+        body.dark-mode .theme-toggle {
+            color: #f1f1f1;
+        }
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes modalSlide {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            .burger {
+                display: flex;
+            }
+
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background-color: white;
+                padding: 10px 20px;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            body.dark-mode .nav-menu {
+                background-color: #1f1f1f;
+            }
+
+            .nav-menu.show {
+                display: flex;
+            }
+        }
+
+        .video-text-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            gap: 2rem;
+            margin-top: 18%;
+        }
+
+        .video-container {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .text-container {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .text-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #642E91;
+        }
+
+        .text-container p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #7b39b1;
+        }
+
+        @media (max-width: 768px) {
+            .video-text-section {
+                flex-direction: column;
+            }
+
+            .video-container,
+            .text-container {
+                max-width: 100%;
+            }
+        }
+
+        .text-image-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            gap: 2rem;
+
+        }
+
+        .text-container {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .text-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+
+        }
+
+        .text-container p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+
+        }
+
+        .image-container {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .text-image-section {
+                flex-direction: column;
+            }
+
+            .text-container,
+            .image-container {
+                max-width: 100%;
+            }
+        }
+
+        section {
+            padding: 80px 20px;
+            
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 40px;
+            color: #642E91;
+            margin-bottom: 50px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .embed-box {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .embed-box iframe {
+            width: 100%;
+            height: 480px;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 30px;
+            }
+        }
+
+        .footer {
+            position: relative;
+            background-color: white;
+            border-top: 1px solid #642E91;
+            color: #374151;
+            padding-top: 2.5rem;
+            padding-bottom: 1.5rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* 🎯 Тёмная тема для футера */
+        body.dark-mode .footer {
+            background-color: #121212;
+            color: #eee;
+            border-top: 1px solid #bb86fc;
+        }
+
+        body.dark-mode .footer-section h3 {
+            color: #bb86fc;
+        }
+
+        body.dark-mode .footer-list a {
+            color: #eee;
+        }
+
+        body.dark-mode .footer-list a:hover {
+            color: #bb86fc;
+        }
+
+
+
+
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .footer-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .footer-section h3 {
+            color: #642E91;
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-list {
+            list-style: none;
+        }
+
+        .footer-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-list a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .footer-list a:hover {
+            text-decoration: underline;
+        }
+
+        .social-link {
+            display: inline-block;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-link:hover {
+            opacity: 0.8;
+        }
+
+        .social-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .footer-logo-center {
+            text-align: center;
+            margin-top: 2.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-logo {
+            height: 2.5rem;
+            margin: 0 auto;
+        }
+
+        .transparent-logo {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            opacity: 0.20;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .transparent-logo img {
+            height: 11.25rem;
+        }
+
+        @media (min-width: 768px) {
+            .transparent-logo img {
+                height: 15.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .transparent-logo img {
+                height: 18rem;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-img">
+                    <img src="images/logo.png" alt="Logo" width="50">
+                </div>
+            </div>
+
+            <button class="burger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item">
+                        <a href="index.html" data-kk="Басты бет" data-ru="Главная" data-en="Home">Басты бет</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="events.html" data-kk="Іс-шаралар" data-ru="События" data-en="Events">Іс-шаралар</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="about.html" data-kk="Біз туралы" data-ru="О нас" data-en="About Us">Біз туралы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" data-kk="Байланыс" data-ru="Контакты" data-en="Contact Us">Байланыс</a>
+                    </li>
+
+                    <li class="language-selector">
+                        <button class="lang-btn" onclick="toggleLanguageDropdown()">🇰🇿 ҚАЗ</button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <div class="lang-option" onclick="changeLanguage('kk')">🇰🇿 ҚАЗ</div>
+                            <div class="lang-option" onclick="changeLanguage('ru')">🇷🇺 РУС</div>
+                            <div class="lang-option" onclick="changeLanguage('en')">🇺🇸 ENG</div>
+                        </div>
+                    </li>
+                    <button class="theme-toggle" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="video-text-section">
+            <div class="video-container">
+                <video controls>
+                    <source src="images/6043617596_996d4af3-5a51-4c44-94f4-a32943d8da0e_Instagram.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="text-container">
+                <h2 data-kk="Студенттік өміріңді мазмұндырақ ету үшін"
+                    data-ru="Чтобы сделать студенческую жизнь более насыщенной."
+                    data-en="To make your student life more saturated.">Студенттік өміріңді мазмұндырақ ету үшін</h2>
+                <p data-kk="We_SDU командасы 2021 жылдан бастап құрылған.
+                Басты мақсатымыз — SDU университетіндегі студенттік өмірді қызықты әрі белсенді ету. Біз әртүрлі іс-шаралар, хакатондар мен шығармашылық жобалар ұйымдастырып, жастарға өз әлеуетін көрсетуге мүмкіндік береміз."
+                    data-ru="Команда We_SDU была основана в 2021 году.
+                    Наша главная цель — сделать студенческую жизнь в университете SDU интересной и активной. Мы организуем различные мероприятия, хакатоны и творческие проекты, предоставляя молодежи возможность раскрыть свой потенциал."
+                    data-en="The We_SDU team was established in 2021.
+                    Our main goal is to make student life at SDU University more engaging and dynamic. We organize various events, hackathons, and creative projects, giving young people the opportunity to showcase their potential.">
+                    We_SDU командасы 2021 жылдан бастап құрылған.
+                    Басты мақсатымыз — SDU университетіндегі студенттік өмірді қызықты әрі белсенді ету. Біз әртүрлі
+                    іс-шаралар, хакатондар мен шығармашылық жобалар ұйымдастырып, жастарға өз әлеуетін көрсетуге
+                    мүмкіндік береміз.
+                </p>
+            </div>
+        </div>
+
+        <div class="text-image-section">
+            <div class="text-container">
+                <h2 data-kk="We_SDU — студенттік өмірдің дәмін кіргізетін команда."
+                    data-ru="We_SDU — команда, придающая вкус студенческой жизни."
+                    data-en="We_SDU is the team that adds flavor to student life.">We_SDU — студенттік өмірдің дәмін
+                    кіргізетін команда.</h2>
+                <p data-kk="We_SDU — идеялар мен достықтың мекені. Мұнда әр студент өз дауысын тауып, армандарын жүзеге асырады."
+                    data-ru="We_SDU — место идей и дружбы. Здесь каждый студент находит свой голос и воплощает мечты."
+                    data-en="We_SDU is a place of ideas and friendship. Here, every student finds their voice and brings their dreams to life.">
+                    We_SDU — идеялар мен достықтың мекені. Мұнда әр студент өз дауысын тауып, армандарын жүзеге асырады.
+                </p>
+            </div>
+            <div class="image-container">
+                <img src="images/about.png" alt="SDU Event Image">
+            </div>
+        </div>
+
+        <section>
+            <div class="container">
+                <h2 data-kk="Ұсынылады" data-ru="Рекомендуем" data-en="We recommend">Ұсынылады</h2>
+                <div class="grid">
+                    <!-- Instagram Embed 1 -->
+                    <div class="embed-box">
+                        <iframe src="https://www.instagram.com/reel/DGLBbFmM2Tg/embed" allowtransparency="true"
+                            scrolling="no"></iframe>
+                    </div>
+
+                    <!-- Instagram Embed 2 -->
+                    <div class="embed-box">
+                        <iframe src="https://www.instagram.com/reel/DJ9YnnqMEx7/embed" allowtransparency="true"
+                            scrolling="no"></iframe>
+                    </div>
+
+                    <!-- Instagram Embed 3 -->
+                    <div class="embed-box">
+                        <iframe src="https://www.instagram.com/reel/DIyotM3I7eX/embed" allowtransparency="true"
+                            scrolling="no"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+</main>
+<footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-section">
+            <h3 data-kk="We_Sdu" data-ru="We_Sdu" data-en="We_Sdu">We_Sdu</h3>
+            <ul class="footer-list">
+                <li>
+                    <a href="about.html"
+                       data-kk="Біз туралы"
+                       data-ru="О нас"
+                       data-en="About us">Біз туралы</a>
+                </li>
+                <li>
+                    <a href="contact.html"
+                       data-kk="Байланыс"
+                       data-ru="Контакты"
+                       data-en="Contacts">Байланыс</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3
+                data-kk="Әлеуметтік желілерде бақылаңыз"
+                data-ru="Следите за нами в соцсетях"
+                data-en="Follow us on social media">
+                Әлеуметтік желілерде бақылаңыз
+            </h3>
+            <a href="https://www.instagram.com/we_sdu?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+               target="_blank"
+               class="social-link">
+                <img src="images/instagram-new (1).png" alt="Instagram" class="social-icon">
+            </a>
+        </div>
+    </div>
+
+    <!-- Төменгі логотип -->
+    <div class="footer-logo-center">
+        <img src="images/logo.png" alt="Логотип" class="footer-logo">
+    </div>
+
+    <!-- Мөлдір логотип -->
+    <div class="transparent-logo">
+        <img src="images/logo.png" alt="Мөлдір логотип">
+    </div>
+</footer>
+    <script>
+        // Language switching
+        function changeLanguage(lang) {
+            const elements = document.querySelectorAll('[data-' + lang + ']');
+            elements.forEach(el => {
+                el.textContent = el.getAttribute('data-' + lang);
+            });
+
+            const placeholders = document.querySelectorAll('[data-' + lang + ']');
+            placeholders.forEach(el => {
+                if (el.hasAttribute('placeholder')) {
+                    el.placeholder = el.getAttribute('data-' + lang);
+                }
+            });
+
+            const langBtn = document.querySelector('.lang-btn');
+            if (lang === 'kk') langBtn.textContent = '🇰🇿 ҚАЗ';
+            else if (lang === 'ru') langBtn.textContent = '🇷🇺 РУС';
+            else if (lang === 'en') langBtn.textContent = '🇺🇸 ENG';
+
+            document.getElementById('langDropdown').classList.remove('show');
+        }
+
+        function toggleLanguageDropdown() {
+            document.getElementById('langDropdown').classList.toggle('show');
+        }
+
+        function toggleMenu() {
+            document.getElementById('navMenu').classList.toggle('show');
+        }
+
+        // Theme toggle
+        const themeToggle = document.querySelector('.theme-toggle');
+        const icon = themeToggle.querySelector('i');
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+
+            icon.classList.toggle('fa-moon', !isDark);
+            icon.classList.toggle('fa-sun', isDark);
+
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    </script>
+</body>
+
+</html>

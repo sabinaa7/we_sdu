@@ -654,7 +654,6 @@
             toggleLanguageDropdown();
         }
 
-        // Load events function
         async function loadEvents() {
             try {
                 const res = await fetch(API_URL);
@@ -665,7 +664,6 @@
                 // Hide spinner
                 spinner.style.display = 'none';
 
-                // If no events, show a message
                 if (!events || events.length === 0) {
                     container.innerHTML = `
                         <div style="text-align: center; padding: 4rem; color: rgba(255,255,255,0.8);">
@@ -682,7 +680,6 @@
                     card.className = 'event-card';
                     card.style.animationDelay = `${index * 0.1}s`;
 
-                    // Format date and time
                     const eventDate = event.Date || 'Дата уточняется';
                     const eventTime = event.Time || '';
                     const eventLocation = event.Location || 'Место уточняется';

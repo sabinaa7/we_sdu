@@ -86,7 +86,6 @@
             transform: translateY(-2px);
         }
 
-        /* Language selector styles */
         .language-selector {
             position: relative;
             display: inline-block;
@@ -146,7 +145,6 @@
             display: none;
         }
 
-        /* Enhanced Events Section */
         .events-hero {
             margin-top: 120px;
             text-align: center;
@@ -248,6 +246,7 @@
             position: relative;
             overflow: hidden;
             height: 250px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
         }
 
         .event-image {
@@ -255,6 +254,7 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.4s ease;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .event-card:hover .event-image {
@@ -382,6 +382,19 @@
             border-top: 4px solid #667eea;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+        }
+
+        /* Default placeholder for missing images */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            color: white;
+            font-size: 3rem;
+            opacity: 0.7;
         }
 
         /* Animations */
@@ -606,6 +619,66 @@
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbw2cVlZC40afdAsk651sQANjDOzoLfNiMU1YM1U_BFBSLBYOZ-EUEuTTq-lj6dzG2FO5Q/exec';
 
+        // Function to convert Google Drive sharing URL to direct image URL
+        function getGoogleDriveImageUrl(url) {
+            if (!url) return null;
+
+            // Handle different Google Drive URL formats
+            let fileId = null;
+
+            // Format: https://drive.google.com/file/d/FILE_ID/view
+            if (url.includes('drive.google.com/file/d/')) {
+                fileId = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1];
+            }
+            // Format: https://drive.google.com/open?id=FILE_ID
+            else if (url.includes('drive.google.com/open?id=')) {
+                fileId = url.match(/id=([a-zA-Z0-9_-]+)/)?.[1];
+            }
+            // Already a direct link
+            else if (url.includes('drive.google.com/uc?')) {
+                return url;
+            }
+
+            // Convert to direct download link
+            if (fileId) {
+                return `https://drive.google.com/uc?export=view&id=${fileId}`;
+            }
+
+            return url; // Return original if can't parse
+        }
+
+        // Function to handle image loading with fallback
+        function createImageElement(imageUrl, eventTitle) {
+            const img = document.createElement('img');
+            img.className = 'event-image';
+            img.alt = eventTitle;
+
+            // Set up error handling before setting src
+            img.onerror = function () {
+                // Replace with placeholder
+                this.style.display = 'none';
+                const placeholder = document.createElement('div');
+                placeholder.className = 'image-placeholder';
+                placeholder.innerHTML = '<i class="fas fa-calendar-alt"></i>';
+                this.parentNode.appendChild(placeholder);
+            };
+
+            // Set the image source
+            const processedUrl = getGoogleDriveImageUrl(imageUrl);
+            if (processedUrl) {
+                img.src = processedUrl;
+            } else {
+                // No valid URL, show placeholder immediately
+                img.style.display = 'none';
+                const placeholder = document.createElement('div');
+                placeholder.className = 'image-placeholder';
+                placeholder.innerHTML = '<i class="fas fa-calendar-alt"></i>';
+                return placeholder;
+            }
+
+            return img;
+        }
+
         // Theme toggle functionality
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
@@ -683,37 +756,48 @@
                     const eventTime = event.Time || '';
                     const eventLocation = event.Location || 'Место уточняется';
                     const eventDescription = event.Description || 'Описание будет добавлено позже';
-                    const eventImage = event.ImageURL || 'https://via.placeholder.com/400x250?text=Event+Image';
 
-                    card.innerHTML = `
-                       <div class="event-image-container">
-    <img src="${eventImage}" alt="${event.Title}" class="event-image" onerror="this.src='https://via.placeholder.com/400x250?text=Event+Image'">
-    <div class="event-badge">
-        <i class="fas fa-star"></i> Новое
-    </div>
-</div>
-<div class="event-content">
-    <h2 class="event-title">${event.Title}</h2>
-    <div class="event-meta">
-        <div class="event-date">
-            <i class="fas fa-calendar-alt"></i>
-            ${eventDate} ${eventTime}
-        </div>
-        <div class="event-location">
-            <i class="fas fa-map-marker-alt"></i>
-            ${eventLocation}
-        </div>
-    </div>
-    <p class="event-description">${eventDescription}</p>
-    <div class="event-footer">
-        <div class="event-price">Бесплатно</div>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfN_-vs_IB7ahO6aYrkNyrkPFFLtChike7_6Om058T0scD6kA/viewform?usp=dialog" class="event-btn" target="_blank">
-            <i class="fas fa-ticket-alt"></i>
-            Участвовать
-        </a>
-    </div>
-</div>
+                    // Create image container
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'event-image-container';
+
+                    // Create image element with proper handling
+                    const imageElement = createImageElement(event.ImageURL, event.Title);
+                    imageContainer.appendChild(imageElement);
+
+                    // Create badge
+                    const badge = document.createElement('div');
+                    badge.className = 'event-badge';
+                    badge.innerHTML = '<i class="fas fa-star"></i> Новое';
+                    imageContainer.appendChild(badge);
+
+                    // Create content
+                    const content = document.createElement('div');
+                    content.className = 'event-content';
+                    content.innerHTML = `
+                        <h2 class="event-title">${event.Title}</h2>
+                        <div class="event-meta">
+                            <div class="event-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                ${eventDate} ${eventTime}
+                            </div>
+                            <div class="event-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                ${eventLocation}
+                            </div>
+                        </div>
+                        <p class="event-description">${eventDescription}</p>
+                        <div class="event-footer">
+                            <div class="event-price">Бесплатно</div>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfN_-vs_IB7ahO6aYrkNyrkPFFLtChike7_6Om058T0scD6kA/viewform?usp=dialog" class="event-btn" target="_blank">
+                                <i class="fas fa-ticket-alt"></i> Участвовать
+                            </a>
+                        </div>
                     `;
+
+                    // Assemble card
+                    card.appendChild(imageContainer);
+                    card.appendChild(content);
                     container.appendChild(card);
                 });
 
@@ -747,7 +831,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             loadTheme();
             loadEvents();
-
         });
     </script>
 </body>

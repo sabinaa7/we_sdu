@@ -384,7 +384,6 @@
             animation: spin 1s linear infinite;
         }
 
-        /* Default placeholder for missing images */
         .image-placeholder {
             width: 100%;
             height: 100%;
@@ -444,7 +443,6 @@
             }
         }
 
-        /* Dark mode styles */
         body.dark-mode {
             background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
             color: #ffffff;
@@ -485,7 +483,6 @@
             background: rgba(90, 103, 216, 0.2);
         }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
             .burger {
                 display: flex;
@@ -619,43 +616,34 @@
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbw2cVlZC40afdAsk651sQANjDOzoLfNiMU1YM1U_BFBSLBYOZ-EUEuTTq-lj6dzG2FO5Q/exec';
 
-        // Function to convert Google Drive sharing URL to direct image URL
         function getGoogleDriveImageUrl(url) {
             if (!url) return null;
 
-            // Handle different Google Drive URL formats
             let fileId = null;
 
-            // Format: https://drive.google.com/file/d/FILE_ID/view
             if (url.includes('drive.google.com/file/d/')) {
                 fileId = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)?.[1];
             }
-            // Format: https://drive.google.com/open?id=FILE_ID
             else if (url.includes('drive.google.com/open?id=')) {
                 fileId = url.match(/id=([a-zA-Z0-9_-]+)/)?.[1];
             }
-            // Already a direct link
             else if (url.includes('drive.google.com/uc?')) {
                 return url;
             }
 
-            // Convert to direct download link
             if (fileId) {
                 return `https://drive.google.com/uc?export=view&id=${fileId}`;
             }
 
-            return url; // Return original if can't parse
+            return url;
         }
 
-        // Function to handle image loading with fallback
         function createImageElement(imageUrl, eventTitle) {
             const img = document.createElement('img');
             img.className = 'event-image';
             img.alt = eventTitle;
 
-            // Set up error handling before setting src
             img.onerror = function () {
-                // Replace with placeholder
                 this.style.display = 'none';
                 const placeholder = document.createElement('div');
                 placeholder.className = 'image-placeholder';
@@ -663,12 +651,10 @@
                 this.parentNode.appendChild(placeholder);
             };
 
-            // Set the image source
             const processedUrl = getGoogleDriveImageUrl(imageUrl);
             if (processedUrl) {
                 img.src = processedUrl;
             } else {
-                // No valid URL, show placeholder immediately
                 img.style.display = 'none';
                 const placeholder = document.createElement('div');
                 placeholder.className = 'image-placeholder';
@@ -679,7 +665,6 @@
             return img;
         }
 
-        // Theme toggle functionality
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
             const icon = document.querySelector('.theme-toggle i');
@@ -692,7 +677,6 @@
             }
         }
 
-        // Load saved theme
         function loadTheme() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
@@ -701,13 +685,11 @@
             }
         }
 
-        // Menu toggle functionality
         function toggleMenu() {
             const navMenu = document.getElementById('navMenu');
             navMenu.classList.toggle('show');
         }
 
-        // Language dropdown functionality
         function toggleLanguageDropdown() {
             const dropdown = document.getElementById('langDropdown');
             dropdown.classList.toggle('show');
@@ -733,7 +715,6 @@
                 const container = document.getElementById('events');
                 const spinner = document.getElementById('loadingSpinner');
 
-                // Hide spinner
                 spinner.style.display = 'none';
 
                 if (!events || events.length === 0) {
@@ -757,21 +738,17 @@
                     const eventLocation = event.Location || 'Место уточняется';
                     const eventDescription = event.Description || 'Описание будет добавлено позже';
 
-                    // Create image container
                     const imageContainer = document.createElement('div');
                     imageContainer.className = 'event-image-container';
 
-                    // Create image element with proper handling
                     const imageElement = createImageElement(event.ImageURL, event.Title);
                     imageContainer.appendChild(imageElement);
 
-                    // Create badge
                     const badge = document.createElement('div');
                     badge.className = 'event-badge';
                     badge.innerHTML = '<i class="fas fa-star"></i> Новое';
                     imageContainer.appendChild(badge);
 
-                    // Create content
                     const content = document.createElement('div');
                     content.className = 'event-content';
                     content.innerHTML = `
@@ -795,7 +772,6 @@
                         </div>
                     `;
 
-                    // Assemble card
                     card.appendChild(imageContainer);
                     card.appendChild(content);
                     container.appendChild(card);
@@ -817,7 +793,6 @@
             }
         }
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function (event) {
             const dropdown = document.getElementById('langDropdown');
             const langBtn = document.querySelector('.lang-btn');
@@ -827,7 +802,6 @@
             }
         });
 
-        // Initialize page
         document.addEventListener('DOMContentLoaded', function () {
             loadTheme();
             loadEvents();

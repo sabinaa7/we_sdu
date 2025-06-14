@@ -686,33 +686,33 @@
                     const eventImage = event.ImageURL || 'https://via.placeholder.com/400x250?text=Event+Image';
 
                     card.innerHTML = `
-                        <div class="event-image-container">
-                            <img src="${eventImage}" alt="${event.Title}" class="event-image" onerror="this.src='https://via.placeholder.com/400x250?text=Event+Image'">
-                            <div class="event-badge">
-                                <i class="fas fa-star"></i> Новое
-                            </div>
-                        </div>
-                        <div class="event-content">
-                            <h2 class="event-title">${event.Title}</h2>
-                            <div class="event-meta">
-                                <div class="event-date">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    ${eventDate} ${eventTime}
-                                </div>
-                                <div class="event-location">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    ${eventLocation}
-                                </div>
-                            </div>
-                            <p class="event-description">${eventDescription}</p>
-                            <div class="event-footer">
-                                <div class="event-price">Бесплатно</div>
-                                <a href="#" class="event-btn">
-                                    <i class="fas fa-ticket-alt"></i>
-                                    Участвовать
-                                </a>
-                            </div>
-                        </div>
+                       <div class="event-image-container">
+    <img src="${eventImage}" alt="${event.Title}" class="event-image" onerror="this.src='https://via.placeholder.com/400x250?text=Event+Image'">
+    <div class="event-badge">
+        <i class="fas fa-star"></i> Новое
+    </div>
+</div>
+<div class="event-content">
+    <h2 class="event-title">${event.Title}</h2>
+    <div class="event-meta">
+        <div class="event-date">
+            <i class="fas fa-calendar-alt"></i>
+            ${eventDate} ${eventTime}
+        </div>
+        <div class="event-location">
+            <i class="fas fa-map-marker-alt"></i>
+            ${eventLocation}
+        </div>
+    </div>
+    <p class="event-description">${eventDescription}</p>
+    <div class="event-footer">
+        <div class="event-price">Бесплатно</div>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSflolALmeAmUezcukGhdwR6JBCYGI5RJf1SGwK41Dos8TBcUQ/viewform?usp=dialog" class="event-btn" target="_blank">
+            <i class="fas fa-ticket-alt"></i>
+            Участвовать
+        </a>
+    </div>
+</div>
                     `;
                     container.appendChild(card);
                 });
